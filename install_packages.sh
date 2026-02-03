@@ -20,20 +20,25 @@ SUCCESS=0
 FAILED=0
 
 # Função para instalar pacote
+# $folder = Path dos arquivos de instalacao (whl)
+# $package = Arquivo .whl principal do pacote
+# $package_name = Nome do package (usado pelo pip install <package_name>)
 install_package() {
     local folder=$1
     local package=$2
+    local package_name=$3
 
-    echo -e "${YELLOW}Instalando: ${package}${NC}"
+    echo -e "${YELLOW}Instalando: ${package_name}${NC}"
 
     if [ -f "${folder}/${package}" ]; then
-        pip install -f ./${folder}/ --no-index ${folder}/${package}
+        cd $folder
+        pip install -f ./ --no-index ${package_name}
 
         if [ $? -eq 0 ]; then
-            echo -e "${GREEN}✓ ${package} instalado com sucesso${NC}"
+            echo -e "${GREEN}✓ ${package_name} instalado com sucesso${NC}"
             ((SUCCESS++))
         else
-            echo -e "${RED}✗ Erro ao instalar ${package}${NC}"
+            echo -e "${RED}✗ Erro ao instalar ${package_name}${NC}"
             ((FAILED++))
         fi
     else
@@ -54,11 +59,11 @@ if [ -z "$VIRTUAL_ENV" ]; then
     echo ""
 fi
 
-# Instalar pacotes (Add ou remover aqui se necessario)
-install_package "black" "black-25.9.0-py3-none-any.whl"
-install_package "fastapi_standard" "fastapi-0.116.1-py3-none-any.whl"
-install_package "lxml" "lxml-6.0.2-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl"
-install_package "requests" "requests-2.32.4-py3-none-any.whl"
+# Instalar pacotes ()
+install_package "/home/a0155266/downloads/python-312-packages/black" "black-25.9.0-py3-none-any.whl" "black"
+install_package "/home/a0155266/downloads/python-312-packages/fastapi_standard" "fastapi-0.116.1-py3-none-any.whl" "fastapi[standard]"
+install_package "/home/a0155266/downloads/python-312-packages/lxml" "lxml-6.0.2-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl" "lxml"
+install_package "/home/a0155266/downloads/python-312-packages/requests" "requests-2.32.4-py3-none-any.whl" "requests"
 
 # Resumo
 echo "=========================================="
